@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const auth = require('../middlewares/auth');
-// const { logout } = require('../controllers/users');
+const { logout } = require('../controllers/users');
 const NotFoundError = require('../errors/NotFoundError');
 
 const signin = require('./signin');
@@ -10,7 +10,7 @@ const movieRouter = require('./movies');
 
 router.use('/signup', signup);
 router.use('/signin', signin);
-// router.post('/signout', auth, logout);
+router.post('/signout', auth, logout);
 router.use('/users', auth, userRouter);
 router.use('/movies', auth, movieRouter);
 router.use('*', auth, (req, res, next) => {

@@ -13,10 +13,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
   useNewUrlParser: true,
-})
-  .then(() => {
-    console.log('Присоединился к БД');
-  });
+});
 
 const options = {
   origin: '*',
@@ -35,6 +32,4 @@ app.use(errorLogger);
 app.use(validationErrors());
 app.use(errors);
 
-app.listen(PORT, () => {
-  console.log(`App listening on port ${PORT}`);
-});
+app.listen(PORT);

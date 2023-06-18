@@ -1,5 +1,5 @@
 const express = require('express');
-const { validateMovie /* validateMovieById */ } = require('../validators/movieValidator');
+const { validateMovie, validateMovieById } = require('../validators/movieValidator');
 
 const movieRouter = express.Router();
 const {
@@ -12,6 +12,6 @@ movieRouter.get('/', getMovies);
 
 movieRouter.post('/', validateMovie, createMovie);
 
-movieRouter.delete('/:movieId', /* validateMovieById */ deleteMovie);
+movieRouter.delete('/:movieId', validateMovieById, deleteMovie);
 
 module.exports = movieRouter;
