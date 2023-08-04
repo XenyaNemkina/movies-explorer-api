@@ -15,14 +15,22 @@ mongoose.connect('mongodb://127.0.0.1:27017/bitfilmsdb', {
   useNewUrlParser: true,
 });
 
-const options = {
-  origin: '*',
+const corsAllowed = {
+  origin: [
+    'http://192.168.1.103:3001',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001',
+    'http://movies.ksenyanemkina.nomoredomains.rocks',
+    'https://movies.ksenyanemkina.nomoredomains.rocks',
+  ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: ['Content-Type', 'Authorization'],
   preflightContinue: false,
   optionsSuccessStatus: 204,
 };
-app.use(cors(options));
+app.use(cors(corsAllowed));
 app.use(requestLogger);
 app.use(express.json());
 app.use(cookieParser());
