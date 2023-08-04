@@ -10,7 +10,7 @@ const {
 } = http2.constants;
 
 const getCurrentUser = (req, res, next) => {
-  const _id = req.user.id;
+  const _id = req.user._id;
   User.findById(({ _id }))
     .then((user) => {
       if (!user) {
@@ -23,18 +23,18 @@ const getCurrentUser = (req, res, next) => {
 
 const createUser = (req, res, next) => {
   const {
-    email, password, name,
+    name, email, password,
   } = req.body;
   bcrypt
     .hash(password, 10)
     .then((hash) => User.create({
-      email, password: hash, name,
+      name, email, password: hash,
     }))
     .then((user) => {
       res.status(HTTP_STATUS_CREATED).send({
-        email: user.email,
         name: user.name,
-        _id: user._id,
+        email: user.email,
+        _id: user.id,
       });
     })
     .catch(next);
@@ -42,12 +42,13 @@ const createUser = (req, res, next) => {
 
 const updateUser = (req, res, next) => {
   const data = req.body;
-  User.findByIdAndUpdate(req.user.id, data, { new: true, runValidators: true })
+  User.findByIdAndUpdate(req.user._id, data, { new: true, runValidators: true })
     .then((user) => {
       res.status(HTTP_STATUS_OK).send({
+        _id: user._id,
         email: user.email,
         name: user.name,
-        _id: user._id,
+
       });
     })
     .catch(next);
@@ -57,7 +58,7 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = generateToken({ id: user._id });
+      const token = generateToken({ _id: user._id });
       res.cookie('jwt', token, {
         maxAge: 3600000,
         httpOnly: true,

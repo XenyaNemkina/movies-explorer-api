@@ -2,12 +2,12 @@ const { checkToken } = require('../helpers/jwt');
 const UnauthorizedError = require('../errors/UnautorizedError');
 
 module.exports = (req, res, next) => {
-  const token = req.cookies.jwt;
+  if (req.headers.authorization === undefined) {
+    return next(new UnauthorizedError('Авторизуйтесь'));
+  }
+  const token = req.headers.authorization.replace('Bearer ', '') || req.cookies.jwt;
   let payload;
   try {
-    if (!token) {
-      return next(new UnauthorizedError('Авторизуйтесь'));
-    }
     payload = checkToken(token);
   } catch (err) {
     return next(new UnauthorizedError('Авторизуйтесь'));

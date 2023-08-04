@@ -8,7 +8,7 @@ const {
 } = http2.constants;
 
 const getMovies = (req, res, next) => {
-  Movie.find({ owner: req.user.id })
+  Movie.find({ owner: req.user._id })
     .populate(['owner'])
     .then((movies) => {
       res.send(movies);
@@ -30,7 +30,7 @@ const createMovie = (req, res, next) => {
     nameRU,
     nameEN,
   } = req.body;
-  const ownerId = req.user.id;
+  const ownerId = req.user._id;
   Movie.create({
     country,
     director,
@@ -54,7 +54,7 @@ const deleteMovie = (req, res, next) => {
   const { movieId } = req.params;
   Movie.findById(movieId)
     .then(async (movie) => {
-      if (movie.owner.toString() !== req.user.id) {
+      if (movie.owner.toString() !== req.user._id) {
         throw new ForbiddenError('Нельзя удалить чужой фильм!');
       }
       const delMovie = await Movie.findByIdAndDelete(movieId);
